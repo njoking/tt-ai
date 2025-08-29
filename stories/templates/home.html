@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Landing Page</title>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+    .cover {
+        background-image: url('cover-image-url.jpg');
+        height: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        position: relative;
+        color: white;
+    }
+    .overlay {
+        background-color: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    .nav-link {
+        color: white !important;
+    }
+    .navbar-custom {
+        background-color: #272144;
+    }
+    .cover {
+    position: relative;
+    width: 100%;
+
+    /* background: linear-gradient(to right, #6a11cb, #2575fc); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.book {
+    width: 100px; /* Adjust the size of the book */
+    animation: fly 5s infinite alternate ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    align-content: center;
+
+}
+.book h1{
+    font-size: 3em;
+}
+
+@keyframes fly {
+    0% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-50px) rotate(30deg);
+    }
+    100% {
+        transform: translateY(0) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.book img {
+    width: 100%;
+    height: auto;
+}
+.hero-text{
+    margin-bottom: 14.8%;
+    font-size: 1.5em;
+}
+.action-button{
+    background-color: #ECA75A;
+    color: #5C1B09;
+    font-weight: 1000;
+
+}
+.action-button:hover{
+    background-color: #33839C;
+}
+body {
+    font-family: 'Papyrus', 'Comic Sans MS', cursive;
+    /* Fallbacks in case Papyrus is not available */
+    background: linear-gradient(to right, #E35F59, #482427);
+
+}
+
+
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+    <a class="navbar-brand" href="/">TuckTight</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+        <div class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="#intro">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#features">Features</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#about">About</a>
+            </li>
+        </div>
+    </div>
+</nav>
+<div id="intro" class="cover" >
+    <div class="overlay d-flex flex-column align-items-center justify-content-center">
+        <div id="book-animation" class="cover text-center">
+            <div class="book">
+                <img src="{% static 'images/cute-tiger-studio_23-2150875332.jpg' %}" alt="Flying Book">
+                <h1>TuckTight</h1>
+            </div>
+        </div>
+        <div class="hero-text">
+                <p class="text-center mt-3">Revolutionizing storytelling with AI-driven narrative creation and immersive delivery.</p>
+                <a href="{%  url 'stories' %}" class="btn btn-primary btn-lg mt-2 action-button">Explore TuckTight</a>
+        </div>
+
+    </div>
+</div>
+
+<div id="features" class="container mt-5">
+    <h2>Key Features</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card" style="background-color: white;">
+                <img src="{% static 'images/pexels-olly-3818561.jpg' %}" class="card-img-top img-fluid" alt="Interactive Story Crafting">
+                <div class="card-body">
+                    <h3 class="card-title">Interactive Story Crafting</h3>
+                    <p class="card-text">Create captivating stories with our AI-driven interactive story crafting tool, which helps you build complex narratives effortlessly.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="background-color: white;">
+                <img src="{% static 'images/pexels-lina-1741231.jpg' %}" class="card-img-top img-fluid" alt="Dynamic Character Development">
+                <div class="card-body">
+                    <h3 class="card-title">Dynamic Character Development</h3>
+                    <p class="card-text">Save stories for later, and get personalized recommendations according to your interests.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card" style="background-color: white;">
+                <img src="{% static 'images/pexels-pixabay-258353.jpg' %}" class="card-img-top img-fluid" alt="AI Narration">
+                <div class="card-body">
+                    <h3 class="card-title">AI Narration</h3>
+                    <p class="card-text">Bring your stories to life with AI-powered narration, offering a range of voices and emotions to enhance listener engagement.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="about" class="container mt-5">
+    <h2>About</h2>
+    <p>This project was inspired by a desire to solve the problem of access to affordable age apropriate educational stories.
+        It is also reminiscent of bedtime stories read to us by our parents. It is an interactive site that not only reads bed-time stories to children but also answers their curiosity questions. The site is usable even by grown up adults helping them delve into novelsIt is a Portfolio Project for #ALXSWE</p>
+    <p>Feel free to check out our <a href="github-repo-url" style="color: white;">GitHub repository</a>.</p>
+    
+    <div style="color: white;">
+        <a href="https://www.linkedin.com/in/felister-njoki-815743282/" style="color: white;">Njoki </a> |
+        <a href="https://github.com/njoking" style="color: white;">GitHub</a> |
+
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+h

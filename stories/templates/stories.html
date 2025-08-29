@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TuckTight</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(to right, #E35F59, #482427);
+        }
+        .cover {
+            background-image: url('cover-image-url.jpg');
+            height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            position: relative;
+            color: white;
+        }
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .story-generator {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            color: black;
+            max-width: 800px;
+            width: 100%;
+        }
+        .book {
+            animation: fly 5s infinite alternate ease-in-out;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .book h1 {
+            font-size: 3em;
+            margin: 0;
+        }
+        @keyframes fly {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-50px) rotate(30deg);
+            }
+            100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        .hero-text {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .hero-text input {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 300px;
+        }
+        .action-button {
+            background-color: #ECA75A;
+            color: #5C1B09;
+            font-weight: 1000;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .action-button:hover {
+            background-color: #33839C;
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 8px solid #3498db;
+            width: 60px;
+            height: 60px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .story-content {
+            text-align: left;
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 5px;
+        }
+        .story-content img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+        .story-content p {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .audio-controls {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .audio-controls label {
+            margin-right: 10px;
+        }
+        .audio-controls input[type="range"] {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="cover">
+        <div class="overlay">
+            <div id="app">
+                <div class="story-generator">
+                    <div class="book">
+                        <h1>TuckTight</h1>
+                    </div>
+                    <div class="hero-text">
+                        <input v-model="word" placeholder="Enter a word" />
+                        <button class="action-button" @click="generateStory">Generate Story</button>
+                    </div>
+                    <div v-if="loading" class="loader"></div>
+                    <div v-if="story" class="story-content">
+                        <img :src="imageUrl" alt="Story image" v-if="imageUrl" />
+                        <p>[[ story ]]</p>
+                        <div class="audio-controls" v-if="audioUrl">
+                            <label for="speed">Speed:</label>
+                            <input type="range" id="speed" min="0.5" max="2" step="0.1" v-model="audioSpeed" @input="adjustAudioSpeed" />
+                            <audio :src="audioUrl" controls></audio>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: '#app',
+            delimiters: ['[[', ']]'],
+            
+            data: {
+                word: '',
+                story: '',
+                imageUrl: '',
+                audioUrl: '',
+                loading: false,
+                audioSpeed: 1
+            },
+            methods: {
+                async generateStory() {
+                    this.loading = true;
+                    this.story = '';
+                    console.log(this.word);
+                    const csrftoken = '{{ csrf_token }}';
+                    try {
+                        const response = await axios.post('/generate-story/', { word: this.word }, {
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            }
+                        });
+                        console.log(response.data)
+                        this.story = response.data.story;
+                        this.imageUrl = response.data.image_url;
+                        this.audioUrl = response.data.audio_url;
+                    } catch (error) {
+                        console.error(error);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                adjustAudioSpeed() {
+                    const audio = this.$el.querySelector('audio');
+                    audio.playbackRate = this.audioSpeed;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
